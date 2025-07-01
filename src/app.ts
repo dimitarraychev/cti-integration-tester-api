@@ -1,9 +1,8 @@
 import express, { Express } from "express";
 import cors from "cors";
 
-import router from "./routes";
-import easitRouter from "./controllers/easitController";
-import { logMiddleware } from "./middlewares/logMiddleware";
+import { log } from "./middlewares/log";
+import baseRoutes from "./routes/baseRoutes";
 
 const app: Express = express();
 const PORT: number | string = process.env.PORT || 3000;
@@ -12,10 +11,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(logMiddleware);
+app.use(log);
 
-app.use("/", router); // handles both base and iSoftBet
-app.use("/", easitRouter);
+app.use("/base", baseRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`);
