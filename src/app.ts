@@ -1,8 +1,8 @@
 import express, { Express } from "express";
 import cors from "cors";
 
-import { log } from "./middlewares/log";
-import baseRoutes from "./routes/baseRoutes";
+import { log } from "./middlewares/log.js";
+import baseRoutes from "./routes/baseRoutes.js";
 
 const app: Express = express();
 const PORT: number | string = process.env.PORT || 3000;

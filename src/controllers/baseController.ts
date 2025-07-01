@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BasePayload, BaseResponse } from "../types/baseTypes";
+import { BasePayload, BaseResponse } from "../types/baseTypes.js";
 
 let balance = 123456;
 let simulateError = false;

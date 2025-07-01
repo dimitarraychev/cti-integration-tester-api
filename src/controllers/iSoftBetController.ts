@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ISoftBetPayload, ISoftBetResponse } from "../types/iSoftBetTypes";
+import { ISoftBetPayload, ISoftBetResponse } from "../types/iSoftBetTypes.js";
 
 let totalBalance = 123456;
 
