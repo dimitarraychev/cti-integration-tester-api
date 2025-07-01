@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { generateLogsBase } from "../utils/logGenerators";
 import { BasePayload, BaseResponse } from "../types/baseTypes";
 
 let totalBalance = 123456;
@@ -73,15 +72,6 @@ export const baseController = (req: Request, res: Response): void => {
 
     response.response_code =
       simulateError && commandToFail === command ? errorResponseMessage : "ok";
-
-    generateLogsBase(
-      req.headers,
-      payload,
-      command,
-      simulateError,
-      commandToFail,
-      response
-    );
 
     res.json(response);
 

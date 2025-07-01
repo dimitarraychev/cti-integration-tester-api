@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { generateLogsISoftBet } from "../utils/logGenerators";
 import { ISoftBetPayload, ISoftBetResponse } from "../types/iSoftBetTypes";
 
 let totalBalance = 123456;
@@ -14,8 +13,6 @@ export const iSoftBetController = (req: Request, res: Response): void => {
     const payload: ISoftBetPayload = req.body.payload_json
       ? JSON.parse(req.body.payload_json)
       : req.body;
-
-    generateLogsISoftBet(req);
 
     if (payload.action) {
       const { command, parameters } = payload.action;
