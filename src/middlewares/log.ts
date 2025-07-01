@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-export const logMiddleware = (
+export const log = (
   req: Request,
   _res: Response,
   next: NextFunction
