@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { BasePayload, BaseResponse } from "../types/baseTypes";
 
-let totalBalance = 123456;
+let balance = 123456;
 let simulateError = false;
 let commandToFail = "";
 const errorResponseMessage = "temporary_error";
@@ -10,6 +10,7 @@ const response: BaseResponse = {
   currency: "EUR",
   response_message: "ok",
   response_code: "ok",
+  totalbalance: balance,
 };
 
 const resetResponse = () => {
@@ -39,29 +40,28 @@ export const baseController = (req: Request, res: Response): void => {
         break;
 
       case "get_account_balance":
-        response.totalbalance = totalBalance;
+        response.totalbalance = balance;
         break;
 
       case "add_account_game_bet":
-        totalBalance -= amount;
-        response.totalbalance = totalBalance;
+        balance -= amount;
+        response.totalbalance = balance;
         break;
 
       case "add_account_game_win":
-        totalBalance += amount;
-        response.totalbalance = totalBalance;
+        balance += amount;
+        response.totalbalance = balance;
         break;
 
       case "add_account_game_bet_and_win":
-        totalBalance -= bet_amount;
-        totalBalance += win_amount;
-        response.totalbalance = totalBalance;
+        balance -= bet_amount;
+        balance += win_amount;
+        response.totalbalance = balance;
         break;
 
       case "cancel":
-        totalBalance += amount;
-        response.freeround_limit = 0;
-        response.totalbalance = totalBalance;
+        balance += amount;
+        response.totalbalance = balance;
         break;
 
       default:
