@@ -5,15 +5,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/app.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start": "ts-node src/app.ts",
+    "dev": "nodemon src/app.ts",
     "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.30.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.8",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
@@ -21,5 +22,8 @@
     "eslint": "^9.30.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
   }
 }

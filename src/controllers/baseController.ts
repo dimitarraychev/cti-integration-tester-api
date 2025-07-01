@@ -19,7 +19,7 @@ const resetResponse = () => {
   commandToFail = "";
 };
 
-export const baseHandler = (req: Request, res: Response): void => {
+export const baseController = (req: Request, res: Response): void => {
   try {
     const payload: BasePayload = req.body.payload_json
       ? JSON.parse(req.body.payload_json)
