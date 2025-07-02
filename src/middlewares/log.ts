@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 export const log = (req: Request, _res: Response, next: NextFunction): void => {
   console.log("--------------- Request Log ---------------");
+  console.log("URL: ", req.url);
+  console.log("METHOD: ", req.method);
 
   let payload: any = req.body;
 
@@ -14,10 +16,8 @@ export const log = (req: Request, _res: Response, next: NextFunction): void => {
   }
 
   const command = payload?.action?.command || payload?.command;
-
-  console.log("URL: ", req.url);
-  console.log("METHOD: ", req.method);
   if (command) console.log("COMMAND:", command);
+
   console.log("HEADERS: ", req.headers);
   console.log("BODY: ", req.body);
 
