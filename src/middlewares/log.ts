@@ -1,21 +1,25 @@
 import { Request, Response, NextFunction } from "express";
 
-export const log = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
+export const log = (req: Request, _res: Response, next: NextFunction): void => {
   console.log("--------------- Request Log ---------------");
+
+  let payload: any = req.body;
+
+  if (typeof req.body.payload_json === "string") {
+    try {
+      payload = JSON.parse(req.body.payload_json);
+    } catch (e) {
+      console.warn("Failed to parse payload_json:", e);
+    }
+  }
+
+  const command = payload?.action?.command || payload?.command;
+
   console.log("URL: ", req.url);
   console.log("METHOD: ", req.method);
+  if (command) console.log("COMMAND:", command);
   console.log("HEADERS: ", req.headers);
   console.log("BODY: ", req.body);
-
-  // Optional: Custom logs for certain payload types
-  const command = req.body?.action?.command || req.body?.command;
-  if (command) {
-    console.log("Detected Command:", command);
-  }
 
   const additionalValues = req.body?.action?.parameters?.additional_game_values;
   if (additionalValues) {
