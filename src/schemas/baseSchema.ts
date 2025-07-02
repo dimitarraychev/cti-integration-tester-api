@@ -38,8 +38,8 @@ const descriptionJsonSchema = {
 
 const jpFieldsSchema = {
   jp_amount: z.number().optional(),
-  jp_level: z.enum(["0", "1", "2", "3"]).optional(),
-  jp_hit_id: z.string().optional(),
+  jp_level: z.enum(["0", "1", "2", "3"]).nullable().optional(),
+  jp_hit_id: z.string().nullable().optional(),
 };
 
 const freeGamesSchema = {
