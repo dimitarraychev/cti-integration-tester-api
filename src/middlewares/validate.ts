@@ -3,10 +3,9 @@ import { ZodSchema } from "zod";
 
 export const validate =
   (schema: ZodSchema) =>
-  (req: Request, res: Response, next: NextFunction): void => {
+  (req: Request, res: Response, next: NextFunction): void | Response => {
     let dataToValidate;
 
-    // Handle form-data or urlencoded with payload_json
     if (typeof req.body.payload_json === "string") {
       try {
         dataToValidate = JSON.parse(req.body.payload_json);
@@ -16,7 +15,6 @@ export const validate =
         });
       }
     } else {
-      // Assume raw JSON body (application/json)
       dataToValidate = req.body;
     }
 
@@ -28,7 +26,6 @@ export const validate =
       });
     }
 
-    // Replace request body with the validated object
     req.body = result.data;
     next();
   };
