@@ -7,7 +7,7 @@ export const log = (req: Request, _res: Response, next: NextFunction): void => {
 
   let payload: any = req.body;
 
-  if (req.body.payload_json && typeof req.body.payload_json === "string") {
+  if (req.body?.payload_json && typeof req.body.payload_json === "string") {
     try {
       payload = JSON.parse(req.body.payload_json);
     } catch (e) {
