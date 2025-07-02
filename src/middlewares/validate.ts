@@ -2,17 +2,17 @@ import { Request, Response, NextFunction } from "express";
 import { ZodSchema } from "zod";
 
 export const validate =
-  (schema: ZodSchema) =>
-  (req: Request, res: Response, next: NextFunction): void | Response => {
+  (schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
     let dataToValidate;
 
     if (typeof req.body.payload_json === "string") {
       try {
         dataToValidate = JSON.parse(req.body.payload_json);
-      } catch (e) {
-        return res.status(400).json({
+      } catch {
+        res.status(400).json({
           message: "Invalid JSON in payload_json",
         });
+        return;
       }
     } else {
       dataToValidate = req.body;
@@ -20,10 +20,11 @@ export const validate =
 
     const result = schema.safeParse(dataToValidate);
     if (!result.success) {
-      return res.status(400).json({
+      res.status(400).json({
         message: "Validation error",
         errors: result.error.flatten(),
       });
+      return;
     }
 
     req.body = result.data;
