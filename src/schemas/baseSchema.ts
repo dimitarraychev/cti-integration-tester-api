@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// Base shared field groups
 const baseSchema = {
   account_id: z.string(),
   token_id: z.string(),
@@ -30,6 +31,29 @@ const betDescriptionSchema = z.object({
   buy_bonus: z.boolean().optional(),
 });
 
+const descriptionJsonSchema = {
+  description_json: betDescriptionSchema.optional(),
+  round_data_json: betDescriptionSchema.optional(),
+};
+
+const jpFieldsSchema = {
+  jp_amount: z.number().optional(),
+  jp_level: z.enum(["0", "1", "2", "3"]).optional(),
+  jp_hit_id: z.string().optional(),
+};
+
+const freeGamesSchema = {
+  free_games_total_win_amount: z.number(),
+  free_games_total_count: z.number(),
+};
+
+const doubleBetSchema = {
+  double_bet_amount: z.number(),
+  double_win_amount: z.number(),
+  double_count: z.number(),
+};
+
+// Command-specific schemas
 const simulateErrorSchema = z.object({
   command: z.literal("simulate_error"),
   command_to_fail: z.string(),
@@ -46,8 +70,7 @@ const addAccountGameBetSchema = z.object({
   command: z.literal("add_account_game_bet"),
   amount: z.number(),
   jp_contribution_amount: z.number().optional(),
-  description_json: betDescriptionSchema.optional(),
-  round_data_json: betDescriptionSchema.optional(),
+  ...descriptionJsonSchema,
 });
 
 const addAccountGameWinSchema = z.object({
@@ -56,14 +79,9 @@ const addAccountGameWinSchema = z.object({
   amount: z.number(),
   command: z.literal("add_account_game_win"),
   without_jp_amount: z.number(),
-  jp_amount: z.number().optional(),
-  jp_level: z.enum(["0", "1", "2", "3"]).optional(),
-  jp_hit_id: z.string().optional(),
-  free_games_total_win_amount: z.number(),
-  free_games_total_count: z.number(),
-  double_bet_amount: z.number(),
-  double_win_amount: z.number(),
-  double_count: z.number(),
+  ...jpFieldsSchema,
+  ...freeGamesSchema,
+  ...doubleBetSchema,
   base_game_total_win_amount: z.number(),
   bet_amount: z.number(),
 });
@@ -75,17 +93,11 @@ const addAccountBetAndWinSchema = z.object({
   bet_amount: z.number(),
   win_amount: z.number(),
   win_without_jp_amount: z.number(),
-  jp_amount: z.number().optional(),
-  jp_level: z.enum(["0", "1", "2", "3"]).optional(),
-  jp_hit_id: z.string().optional(),
-  free_games_total_win_amount: z.number(),
-  free_games_total_count: z.number(),
-  double_bet_amount: z.number(),
-  double_win_amount: z.number(),
-  double_count: z.number(),
+  ...jpFieldsSchema,
+  ...freeGamesSchema,
+  ...doubleBetSchema,
   base_game_total_win_amount: z.number(),
-  description_json: betDescriptionSchema.optional(),
-  round_data_json: betDescriptionSchema.optional(),
+  ...descriptionJsonSchema,
 });
 
 const cancelSchema = z.object({
@@ -94,8 +106,7 @@ const cancelSchema = z.object({
   command: z.literal("cancel"),
   amount: z.number(),
   cancel_whole_gameplay: z.boolean(),
-  description_json: betDescriptionSchema.optional(),
-  round_data_json: betDescriptionSchema.optional(),
+  ...descriptionJsonSchema,
 });
 
 // Union all command schemas into one
