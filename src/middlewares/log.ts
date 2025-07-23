@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
+let logID = 1;
+
 export const log = (req: Request, _res: Response, next: NextFunction): void => {
   console.log("--------------- Request Log ---------------");
   console.log("URL: ", req.url);
