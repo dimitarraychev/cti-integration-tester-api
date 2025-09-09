@@ -23,7 +23,7 @@ const transactionSchema = {
   is_freeround: z.union([z.literal(0), z.literal(1)]),
   freeround_campaign_id: z.number().optional(),
   freeround_promotion_id: z.number().optional(),
-  multiple_bet: z.union([z.literal(0), z.literal(1)]),
+  multiple_bet: z.union([z.literal(0), z.literal(1)]).optional(),
 };
 
 const betDescriptionSchema = z.object({

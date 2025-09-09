@@ -11,5 +11,5 @@ export interface BaseResponse {
   response_message: string;
   response_code: string;
   totalbalance: number;
-  freeround_limit: number;
+  // freeround_limit: number;
 }
