@@ -30,7 +30,7 @@ export const iSoftBetService = (req: Request, res: Response): void => {
 
         case "bet":
           totalBalance -= parameters.amount ?? 0;
-          res.json({ ...response, balance: totalBalance });
+          // res.json({ ...response, balance: totalBalance });
           return;
 
         case "win":
