@@ -6,12 +6,18 @@ let simulateError = false;
 let commandToFail = "";
 const errorResponseMessage = "temporary_error";
 
-const createResponse = (): BaseResponse => ({
+const response: BaseResponse = {
   currency: "EUR",
   response_message: "ok",
   response_code: "ok",
-  totalbalance: 0,
-});
+  totalbalance: balance,
+};
+
+const resetResponse = () => {
+  response.response_code = "ok";
+  simulateError = false;
+  commandToFail = "";
+};
 
 export const baseService = (req: Request, res: Response): void => {
   try {
@@ -27,8 +33,6 @@ export const baseService = (req: Request, res: Response): void => {
       command_to_fail,
     } = payload;
 
-    let response = createResponse();
-
     switch (command) {
       case "simulate_error":
         simulateError = true;
@@ -36,23 +40,30 @@ export const baseService = (req: Request, res: Response): void => {
         break;
 
       case "get_account_balance":
+        response.totalbalance = balance;
         break;
 
       case "add_account_game_bet":
         balance -= amount;
+        response.totalbalance = balance;
+        response.response_code = "temporary_error";
+        response.response_message = "GA_609";
         break;
 
       case "add_account_game_win":
         balance += amount;
+        response.totalbalance = balance;
         break;
 
       case "add_account_game_bet_and_win":
         balance -= bet_amount;
         balance += win_amount;
+        response.totalbalance = balance;
         break;
 
       case "cancel":
         balance += amount;
+        response.totalbalance = balance;
         break;
 
       default:
@@ -61,21 +72,18 @@ export const baseService = (req: Request, res: Response): void => {
         return;
     }
 
-    response.totalbalance = balance;
-
-    if (simulateError && commandToFail === command) {
-      res.status(500).json({
-        ...response,
-        response_code: errorResponseMessage,
-        response_message: "Simulated temporary error",
-      });
-
-      simulateError = false;
-      commandToFail = "";
-      return;
-    }
+    // response.response_code =
+    //   simulateError && commandToFail === command ? errorResponseMessage : "ok";
 
     res.json(response);
+    // console.log("----------------- START OF RESPONSE----------------");
+    // console.log("Response: ");
+    // console.log(response);
+    // console.log("-------------------END OF RESPONSE----------------");
+
+    if (simulateError && commandToFail === command) {
+      resetResponse();
+    }
   } catch (error) {
     console.error("Base API Error:", error);
     res.status(400).json({ message: "Invalid JSON format" });
