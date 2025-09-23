@@ -4,7 +4,6 @@ import { BasePayload, BaseResponse } from "../types/baseTypes.js";
 let balance = 123456;
 let simulateError = false;
 let commandToFail = "";
-// let freerounds = 5;
 const errorResponseMessage = "temporary_error";
 
 const response: BaseResponse = {
@@ -12,7 +11,6 @@ const response: BaseResponse = {
   response_message: "ok",
   response_code: "ok",
   totalbalance: balance,
-  // freeround_limit: freerounds,
 };
 
 const resetResponse = () => {
@@ -48,8 +46,6 @@ export const baseService = (req: Request, res: Response): void => {
       case "add_account_game_bet":
         balance -= amount;
         response.totalbalance = balance;
-        response.response_code = "333";
-        response.response_message = "Err";
         break;
 
       case "add_account_game_win":
@@ -78,6 +74,9 @@ export const baseService = (req: Request, res: Response): void => {
       simulateError && commandToFail === command ? errorResponseMessage : "ok";
 
     res.json(response);
+    console.log("----------------- START OF RESPONSE----------------");
+    console.log("Response: " + response);
+    console.log("-------------------END OF RESPONSE----------------");
 
     if (simulateError && commandToFail === command) {
       resetResponse();
