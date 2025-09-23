@@ -75,7 +75,7 @@ export const baseService = (req: Request, res: Response): void => {
     // response.response_code =
     //   simulateError && commandToFail === command ? errorResponseMessage : "ok";
 
-    // res.json(response);
+    res.json(response);
     // console.log("----------------- START OF RESPONSE----------------");
     // console.log("Response: ");
     // console.log(response);
