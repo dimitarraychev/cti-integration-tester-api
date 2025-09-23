@@ -46,10 +46,10 @@ export const baseService = (req: Request, res: Response): void => {
         break;
 
       case "add_account_game_bet":
-        // if (freerounds > 0) freerounds -= 1;
-        // response.freeround_limit = freerounds;
         balance -= amount;
         response.totalbalance = balance;
+        response.response_code = "333";
+        response.response_message = "Err";
         break;
 
       case "add_account_game_win":
