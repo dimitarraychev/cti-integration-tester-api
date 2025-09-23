@@ -46,6 +46,8 @@ export const baseService = (req: Request, res: Response): void => {
       case "add_account_game_bet":
         balance -= amount;
         response.totalbalance = balance;
+        response.response_code = "temporary_error";
+        response.response_message = "GA_609";
         break;
 
       case "add_account_game_win":
@@ -70,14 +72,14 @@ export const baseService = (req: Request, res: Response): void => {
         return;
     }
 
-    response.response_code =
-      simulateError && commandToFail === command ? errorResponseMessage : "ok";
+    // response.response_code =
+    //   simulateError && commandToFail === command ? errorResponseMessage : "ok";
 
-    res.json(response);
-    console.log("----------------- START OF RESPONSE----------------");
-    console.log("Response: ");
-    console.log(response);
-    console.log("-------------------END OF RESPONSE----------------");
+    // res.json(response);
+    // console.log("----------------- START OF RESPONSE----------------");
+    // console.log("Response: ");
+    // console.log(response);
+    // console.log("-------------------END OF RESPONSE----------------");
 
     if (simulateError && commandToFail === command) {
       resetResponse();
