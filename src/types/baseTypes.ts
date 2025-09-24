@@ -4,6 +4,9 @@ export interface BasePayload {
   bet_amount?: number;
   win_amount?: number;
   command_to_fail?: string;
+  account_id?: string;
+  error_message?: string;
+  error_code?: string;
 }
 
 export interface BaseResponse {

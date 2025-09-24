@@ -1,91 +1,100 @@
 import { Request, Response } from "express";
 import { BasePayload, BaseResponse } from "../types/baseTypes.js";
+import { applyCommandEffects } from "../utils/baseCommands.js";
+import { logResponse } from "../utils/responseLogger.js";
 
 let balance = 123456;
-let simulateError = false;
-let commandToFail = "";
-const errorResponseMessage = "temporary_error";
 
-const response: BaseResponse = {
+let pendingFailure: {
+  command: string;
+  account_id: string;
+  code: string;
+  message?: string;
+} | null = null;
+
+const createBaseResponse = (): BaseResponse => ({
   currency: "EUR",
   response_message: "ok",
   response_code: "ok",
   totalbalance: balance,
-};
-
-const resetResponse = () => {
-  response.response_code = "ok";
-  simulateError = false;
-  commandToFail = "";
-};
+});
 
 export const baseService = (req: Request, res: Response): void => {
   try {
-    const payload: BasePayload = req.body.payload_json
+    const payload: BasePayload = req.body?.payload_json
       ? JSON.parse(req.body.payload_json)
       : req.body;
 
-    const {
-      command,
-      amount = 0,
-      bet_amount = 0,
-      win_amount = 0,
-      command_to_fail,
-    } = payload;
+    const { command, command_to_fail, account_id, error_code, error_message } =
+      payload || {};
 
-    switch (command) {
-      case "simulate_error":
-        simulateError = true;
-        commandToFail = command_to_fail || "";
-        break;
+    if (!command || typeof command !== "string") {
+      res.status(400).json({ message: "Missing or invalid 'command' field" });
+      return;
+    }
 
-      case "get_account_balance":
-        response.totalbalance = balance;
-        break;
-
-      case "add_account_game_bet":
-        balance -= amount;
-        response.totalbalance = balance;
-        response.response_code = "temporary_error";
-        response.response_message = "GA_609";
-        break;
-
-      case "add_account_game_win":
-        balance += amount;
-        response.totalbalance = balance;
-        break;
-
-      case "add_account_game_bet_and_win":
-        balance -= bet_amount;
-        balance += win_amount;
-        response.totalbalance = balance;
-        break;
-
-      case "cancel":
-        balance += amount;
-        response.totalbalance = balance;
-        break;
-
-      default:
-        console.log("Unknown command received:", command);
-        res.status(400).json({ message: "Unknown command" });
+    // Schedule an error for the next matching command
+    if (command === "simulate_error") {
+      if (
+        !command_to_fail ||
+        typeof command_to_fail !== "string" ||
+        !account_id
+      ) {
+        res.status(400).json({
+          message: "Missing 'command_to_fail' or 'id' for simulate_error",
+        });
         return;
+      }
+      pendingFailure = {
+        command: command_to_fail,
+        account_id,
+        code: error_code || "temporary_error",
+        message: error_message || "Simulated error",
+      };
+
+      const ack: BaseResponse = {
+        ...createBaseResponse(),
+        response_message: `Next '${command_to_fail}' for account '${account_id}' will return error '${pendingFailure.code}'.`,
+      };
+
+      logResponse(ack);
+      res.json(ack);
+      return;
     }
 
-    // response.response_code =
-    //   simulateError && commandToFail === command ? errorResponseMessage : "ok";
+    // Apply business logic
+    const result = applyCommandEffects(command, payload, balance);
+    balance = result.balance;
 
+    if (!result.ok) {
+      res.status(400).json({ message: result.message || "Unknown command" });
+      return;
+    }
+
+    const response = createBaseResponse();
+
+    // Check if this request should fail
+    if (
+      pendingFailure &&
+      pendingFailure.command === command &&
+      pendingFailure.account_id === account_id
+    ) {
+      response.response_code = pendingFailure.code;
+      response.response_message = pendingFailure.message || pendingFailure.code;
+
+      // Clear pending failure after one use
+      pendingFailure = null;
+
+      logResponse(response);
+      res.json(response);
+      return;
+    }
+
+    // Normal success response
+    logResponse(response);
     res.json(response);
-    // console.log("----------------- START OF RESPONSE----------------");
-    // console.log("Response: ");
-    // console.log(response);
-    // console.log("-------------------END OF RESPONSE----------------");
-
-    if (simulateError && commandToFail === command) {
-      resetResponse();
-    }
-  } catch (error) {
-    console.error("Base API Error:", error);
-    res.status(400).json({ message: "Invalid JSON format" });
+  } catch (err) {
+    console.error("Base API Error:", err);
+    res.status(400).json({ message: "Invalid JSON format or payload" });
   }
 };
