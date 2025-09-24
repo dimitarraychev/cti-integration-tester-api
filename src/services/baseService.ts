@@ -40,6 +40,8 @@ export const baseService = (req: Request, res: Response): void => {
         typeof command_to_fail !== "string" ||
         !account_id
       ) {
+        console.log(command_to_fail);
+        console.log(account_id);
         res.status(400).json({
           message: "Missing 'command_to_fail' or 'id' for simulate_error",
         });
