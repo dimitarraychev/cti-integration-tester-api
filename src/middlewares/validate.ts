@@ -10,7 +10,8 @@ export const validate =
         dataToValidate = JSON.parse(req.body.payload_json);
       } catch {
         res.status(400).json({
-          message: "Invalid JSON in payload_json",
+          response_code: "error",
+          response_message: "Invalid JSON in payload_json",
         });
         return;
       }
@@ -21,8 +22,8 @@ export const validate =
     const result = schema.safeParse(dataToValidate);
     if (!result.success) {
       res.status(400).json({
-        message: "Validation error",
-        errors: result.error.flatten(),
+        response_code: "error",
+        response_message: "Validation error" + result.error.flatten(),
       });
       return;
     }
