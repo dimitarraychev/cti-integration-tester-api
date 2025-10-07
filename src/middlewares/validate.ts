@@ -23,7 +23,7 @@ export const validate =
     if (!result.success) {
       res.status(400).json({
         response_code: "error",
-        response_message: "Validation error" + result.error.flatten(),
+        response_message: "Validation error: " + result.error.flatten(),
       });
       return;
     }
