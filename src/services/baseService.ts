@@ -40,6 +40,8 @@ export const baseService = (req: Request, res: Response): void => {
         typeof command_to_fail !== "string" ||
         !account_id
       ) {
+        console.log(payload);
+
         res.status(400).json({
           message: "Missing 'command_to_fail' or 'id' for simulate_error",
         });
@@ -62,15 +64,6 @@ export const baseService = (req: Request, res: Response): void => {
       return;
     }
 
-    // Apply business logic
-    const result = applyCommandEffects(command, payload, balance);
-    balance = result.balance;
-
-    if (!result.ok) {
-      res.status(400).json({ message: result.message || "Unknown command" });
-      return;
-    }
-
     const response = createBaseResponse();
 
     // Check if this request should fail
@@ -87,6 +80,15 @@ export const baseService = (req: Request, res: Response): void => {
 
       logResponse(response);
       res.json(response);
+      return;
+    }
+
+    // Apply business logic
+    const result = applyCommandEffects(command, payload, balance);
+    balance = result.balance;
+
+    if (!result.ok) {
+      res.status(400).json({ message: result.message || "Unknown command" });
       return;
     }
 
