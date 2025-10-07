@@ -57,6 +57,7 @@ const doubleBetSchema = {
 const simulateErrorSchema = z.object({
   command: z.literal("simulate_error"),
   command_to_fail: z.string(),
+  account_id: z.string().optional(),
   error_message: z.string().optional(),
   error_code: z.string().optional(),
 });
