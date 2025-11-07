@@ -10,6 +10,7 @@ const baseSchema = {
   game_id: z.number(),
   game_id_string: z.string(),
   session_data: z.string().nullable().optional(),
+  is_freeround: z.union([z.literal(0), z.literal(1)]).optional(),
 };
 
 const transactionSchema = {

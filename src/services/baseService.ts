@@ -25,7 +25,7 @@ export const baseService = (req: Request, res: Response): void => {
       ? JSON.parse(req.body.payload_json)
       : req.body;
 
-    const { command, command_to_fail, account_id, error_code, error_message } =
+    const { command, command_to_fail, account_id, error_code, error_message, is_freeround } =
       payload || {};
 
     if (!command || typeof command !== "string") {
@@ -33,7 +33,6 @@ export const baseService = (req: Request, res: Response): void => {
       return;
     }
 
-    // Schedule an error for the next matching command
     if (command === "simulate_error") {
       if (
         !command_to_fail ||
@@ -66,7 +65,6 @@ export const baseService = (req: Request, res: Response): void => {
 
     const response = createBaseResponse();
 
-    // Check if this request should fail
     if (
       pendingFailure &&
       pendingFailure.command === command &&
@@ -75,7 +73,6 @@ export const baseService = (req: Request, res: Response): void => {
       response.response_code = pendingFailure.code;
       response.response_message = pendingFailure.message || pendingFailure.code;
 
-      // Clear pending failure after one use
       pendingFailure = null;
 
       logResponse(response);
@@ -83,7 +80,6 @@ export const baseService = (req: Request, res: Response): void => {
       return;
     }
 
-    // Apply business logic
     const result = applyCommandEffects(command, payload, balance);
     balance = result.balance;
 
@@ -92,7 +88,6 @@ export const baseService = (req: Request, res: Response): void => {
       return;
     }
 
-    // Normal success response
     logResponse(response);
     res.json(response);
   } catch (err) {

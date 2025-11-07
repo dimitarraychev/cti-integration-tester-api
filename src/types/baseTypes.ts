@@ -7,6 +7,7 @@ export interface BasePayload {
   account_id?: string;
   error_message?: string;
   error_code?: string;
+  is_freeround?: number;
 }
 
 export interface BaseResponse {
@@ -14,5 +15,4 @@ export interface BaseResponse {
   response_message: string;
   response_code: string;
   totalbalance: number;
-  // freeround_limit: number;
 }
