@@ -10,6 +10,7 @@ const app: Express = express();
 const PORT: number | string = process.env.PORT || 3000;
 
 app.use(cors());
+app.options("*", cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
