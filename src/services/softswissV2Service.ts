@@ -27,8 +27,10 @@ export const generateSoftswissLaunchURL = async (
         "Content-Type": "application/json",
         "X-REQUEST-SIGN": signature,
       },
-      body: JSON.stringify(JSON.parse(formData)),
+      body: JSON.parse(formData),
     });
+
+    console.log("ASD :", JSON.parse(formData));
 
     if (!response.ok) {
       res.status(400).json({ message: "Internal Error" });
