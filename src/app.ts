@@ -4,6 +4,7 @@ import cors from "cors";
 import { log } from "./middlewares/log.js";
 import baseController from "./controllers/baseController.js";
 import iSoftBetController from "./controllers/iSoftBetController.js";
+import softswissV2Controller from "./controllers/softswissV2Controller.js";
 
 const app: Express = express();
 const PORT: number | string = process.env.PORT || 3000;
@@ -16,6 +17,7 @@ app.use(log);
 
 app.use("/base", baseController);
 app.use("/isoftbet", iSoftBetController);
+app.use("/softswissv2", softswissV2Controller);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`);
