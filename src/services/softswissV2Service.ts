@@ -24,7 +24,7 @@ export const generateSoftswissLaunchURL = async (
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
         "X-REQUEST-SIGN": signature,
       },
       body: formData,
