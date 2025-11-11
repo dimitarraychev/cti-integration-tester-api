@@ -30,7 +30,7 @@ export const generateSoftswissLaunchURL = async (
       body: JSON.stringify(JSON.parse(formData)),
     });
 
-    console.log("ASD :", JSON.stringify(JSON.parse(formData)));
+    console.log("RES: ", response);
 
     if (!response.ok) {
       res.status(400).json({ message: "Internal Error" });
