@@ -27,7 +27,7 @@ export const generateSoftswissLaunchURL = async (
         "Content-Type": "application/json",
         "X-REQUEST-SIGN": signature,
       },
-      body: formData,
+      body: JSON.stringify(JSON.parse(formData)),
     });
 
     if (!response.ok) {
