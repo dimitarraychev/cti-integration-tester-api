@@ -15,11 +15,10 @@ export const generateSoftswissLaunchURL = async (
   req: Request,
   res: Response
 ) => {
-  const { apikey, psk, payload } = req.body;
+  const { formData, apikey, psk } = req.body;
   const baseUrl = "https://rgs-stage-api.ctrgs.com:1381/softswiss-api/";
   const url = `${baseUrl}${apikey}/v2/a8r_provider.Launcher/Real`;
-  const body = JSON.stringify(payload);
-  const signature = generateHmacSha256Hex(body, psk);
+  const signature = generateHmacSha256Hex(formData, psk);
 
   try {
     const response = await fetch(url, {
@@ -28,7 +27,7 @@ export const generateSoftswissLaunchURL = async (
         "Content-Type": "application/x-www-form-urlencoded",
         "X-REQUEST-SIGN": signature,
       },
-      body,
+      body: formData,
     });
 
     if (!response.ok) {
