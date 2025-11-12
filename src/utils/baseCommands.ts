@@ -22,7 +22,9 @@ export const applyCommandEffects = (
     case "add_account_game_win":
       return { balance: balance + amount, ok: true };
     case "add_account_game_bet_and_win":
-      return { balance: balance - bet_amount + win_amount, ok: true };
+      return is_freeround === 1
+        ? { balance: balance + win_amount, ok: true }
+        : { balance: balance - bet_amount + win_amount, ok: true };
     case "cancel":
       return { balance: balance + amount, ok: true };
     default:
