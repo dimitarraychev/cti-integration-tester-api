@@ -16,7 +16,7 @@ export const applyCommandEffects = (
     case "get_account_balance":
       return { balance, ok: true };
     case "add_account_game_bet":
-      return is_freeround
+      return is_freeround === 1
         ? { balance, ok: true }
         : { balance: balance - amount, ok: true };
     case "add_account_game_win":
