@@ -3,10 +3,6 @@ import crypto from "crypto";
 
 let totalBalance = 123456;
 
-export const softswissV2Service = (req: Request, res: Response): void => {
-  //
-};
-
 export const generateHmacSha256Hex = (payload: string, PSK: string): string => {
   return crypto.createHmac("sha256", PSK).update(payload, "utf8").digest("hex");
 };
@@ -40,6 +36,7 @@ export const generateSoftswissLaunchURL = async (
 
     res.json(data.launch_url);
   } catch (error: any) {
+    console.log("ERROR: " + error);
     res.status(400).json({ message: "Internal Error" });
   }
 };
