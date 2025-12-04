@@ -33,7 +33,7 @@ export const generateSoftswissLaunchURL = async (
     console.log("RES: ", response);
 
     if (!response.ok) {
-      res.status(400).json({ message: "Internal Error" });
+      return res.status(400).json({ message: "Internal Error" });
     }
 
     const data = await response.json();
